@@ -20,10 +20,26 @@ function M.plan()
   end)
 end
 function M.decision() return require("claude-plan.note").decision() end
-function M.notes() return require("claude-plan.send").text("/notes") end
-function M.spec() return require("claude-plan.send").text("/spec") end
+function M.notes() return require("claude-plan.send").text("/cp-notes") end
+function M.spec() return require("claude-plan.send").text("/cp-spec") end
 function M.specs() return require("claude-plan.specs").pick() end
 function M.clear() return require("claude-plan.send").clear() end
+function M.reload()
+  local window = require("claude-plan.window")
+  window.stop()
+  vim.fn.jobstart({ "claude", "plugin", "update", "my-claude-agents" }, {
+    on_exit = function(_, code)
+      vim.schedule(function()
+        if code == 0 then
+          print("claude-plan: plugin updated, starting new session")
+        else
+          print("claude-plan: plugin update failed, starting new session anyway")
+        end
+        window.toggle()
+      end)
+    end,
+  })
+end
 function M.stop() return require("claude-plan.window").stop() end
 function M.status() return require("claude-plan.window").status() end
 

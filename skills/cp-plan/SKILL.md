@@ -1,6 +1,6 @@
 ---
 name: cp-plan
-description: Use when the user invokes /cp-plan with a Jira URL, or uses /note, /decision, /notes, or /spec during a planning session. Manages Jira-driven codebase exploration, automatic note capture, and spec writing.
+description: Use when the user invokes /cp-plan with a Jira URL. Manages Jira-driven codebase exploration and automatic note capture. Related commands: /cp-note, /cp-decision, /cp-notes, /cp-spec.
 ---
 
 # Planning Session
@@ -30,7 +30,7 @@ curl -s -u "{username}:{token}" -H "Accept: application/json" "https://applause.
 
 Extract from the response: `fields.summary` (title), `fields.description` (ADF format — convert to plain text), `fields.status.name`, `fields.assignee.displayName`, `fields.priority.name`, `fields.comment.comments`, and any subtasks from `fields.subtasks`.
 3. Detect the current repo from the working directory name
-4. Read the matching repo reference file from the plugin's `skills/plan/references/{repo-name}.md` if it exists
+4. Read the matching repo reference file from the plugin's `skills/cp-plan/references/{repo-name}.md` if it exists
 5. Create the spec folder: `~/.claude-plan/specs/{repo-name}/{ticket-id}/`
 6. Create `notes.md` with a context section that includes all the Jira ticket info, followed by the notes section:
 
@@ -87,13 +87,12 @@ Then append it to `notes.md`.
 
 ### Explicit Commands
 
-**`/note [{file:line}] {text}`** — Capture a note verbatim. The `[{file:line}]` context may be sent automatically from the user's editor. Append to `notes.md` under the appropriate file heading.
+These are separate skills the user can invoke:
 
-**`/decision [{file:line}] {text}`** — Capture a decision. Prefix with `DECISION:` in notes.
-
-**`/notes`** — Display all captured notes so far, grouped by file.
-
-**`/spec`** — Write the spec (see Phase 3 below).
+- **`/cp-note [{file:line}] {text}`** — Capture a note
+- **`/cp-decision [{file:line}] {text}`** — Capture a decision
+- **`/cp-notes`** — Display all captured notes
+- **`/cp-spec`** — Write the spec
 
 ### Note Format in `notes.md`
 
@@ -112,7 +111,7 @@ If a note has no file context, put it under a `### General` heading.
 
 ## Writing the Spec
 
-When the user says `/spec`, "write it up", "write the spec", or "I'm done exploring":
+When the user says `/cp-spec`, "write it up", "write the spec", or "I'm done exploring":
 
 1. Read all notes from `notes.md`
 2. Write `~/.claude-plan/specs/{repo-name}/{ticket-id}/spec.md` organized into logical sections. The format is open-ended but should generally include:

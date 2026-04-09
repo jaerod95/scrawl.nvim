@@ -8,9 +8,9 @@ function M.capture()
 
   vim.ui.input({ prompt = "Note: " }, function(input)
     if input and input ~= "" then
-      send.text(string.format("/note [%s:%d] %s", ctx.file, ctx.line, input))
+      send.text(string.format("/cp-note [%s:%d] %s", ctx.file, ctx.line, input))
     else
-      send.text(string.format("/note [%s:%d]", ctx.file, ctx.line))
+      send.text(string.format("/cp-note [%s:%d]", ctx.file, ctx.line))
     end
   end)
 end
@@ -20,7 +20,7 @@ function M.decision()
 
   vim.ui.input({ prompt = "Decision: " }, function(input)
     if not input or input == "" then return end
-    send.text(string.format("/decision [%s:%d] %s", ctx.file, ctx.line, input))
+    send.text(string.format("/cp-decision [%s:%d] %s", ctx.file, ctx.line, input))
   end)
 end
 

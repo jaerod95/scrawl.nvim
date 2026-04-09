@@ -21,7 +21,7 @@ describe("note", function()
       vim.ui.input = original_input
 
       assert.are.equal(1, #sent)
-      assert.is_truthy(sent[1]:find("/note"))
+      assert.is_truthy(sent[1]:find("/cp%-note"))
       assert.is_truthy(sent[1]:find("this is a test note"))
     end)
 
@@ -37,7 +37,7 @@ describe("note", function()
       vim.ui.input = original_input
 
       assert.are.equal(1, #sent)
-      assert.is_truthy(sent[1]:find("/note"))
+      assert.is_truthy(sent[1]:find("/cp%-note"))
       assert.is_truthy(sent[1]:find("%[.*:%d+%]"))
     end)
 
@@ -53,7 +53,7 @@ describe("note", function()
       vim.ui.input = original_input
 
       assert.are.equal(1, #sent)
-      assert.is_truthy(sent[1]:find("/note"))
+      assert.is_truthy(sent[1]:find("/cp%-note"))
     end)
 
     it("includes file and line context in note", function()
@@ -85,7 +85,7 @@ describe("note", function()
       vim.ui.input = original_input
 
       assert.are.equal(1, #sent)
-      assert.is_truthy(sent[1]:find("/decision"))
+      assert.is_truthy(sent[1]:find("/cp%-decision"))
       assert.is_truthy(sent[1]:find("use boolean field"))
       assert.is_truthy(sent[1]:find("%[.*:%d+%]"))
     end)

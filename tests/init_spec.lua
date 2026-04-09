@@ -42,6 +42,10 @@ describe("claude-plan", function()
       assert.is_function(claude.stop)
     end)
 
+    it("exports reload function", function()
+      assert.is_function(claude.reload)
+    end)
+
     it("exports status function", function()
       assert.is_function(claude.status)
     end)
