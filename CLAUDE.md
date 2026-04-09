@@ -14,7 +14,7 @@
 
 # Project Structure
 
-- `lua/claude-plan/` — Neovim plugin source (Lua)
+- `lua/scrawl/` — Neovim plugin source (Lua)
 - `skills/` — Claude Code skill definitions (Markdown)
 - `specs/` — Planning specs written by the `/plan` skill
 - `tests/` — Plenary busted tests for the Neovim plugin

@@ -1,4 +1,4 @@
-local window = require("claude-plan.window")
+local window = require("scrawl.window")
 
 describe("window", function()
   after_each(function()

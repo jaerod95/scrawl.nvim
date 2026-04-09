@@ -1,4 +1,4 @@
-local context = require("claude-plan.context")
+local context = require("scrawl.context")
 
 describe("context", function()
   describe("get", function()

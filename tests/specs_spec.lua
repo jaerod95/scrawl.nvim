@@ -1,4 +1,4 @@
-local specs = require("claude-plan.specs")
+local specs = require("scrawl.specs")
 
 describe("specs", function()
   describe("pick", function()

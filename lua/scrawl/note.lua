@@ -1,5 +1,5 @@
-local context = require("claude-plan.context")
-local send = require("claude-plan.send")
+local context = require("scrawl.context")
+local send = require("scrawl.send")
 
 local M = {}
 

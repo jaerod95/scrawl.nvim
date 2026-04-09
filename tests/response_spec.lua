@@ -1,4 +1,4 @@
-local response = require("claude-plan.response")
+local response = require("scrawl.response")
 
 describe("response", function()
   after_each(function()

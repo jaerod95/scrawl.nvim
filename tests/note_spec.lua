@@ -3,9 +3,9 @@ describe("note", function()
 
   before_each(function()
     -- clear module cache to get fresh instances
-    package.loaded["claude-plan.note"] = nil
-    package.loaded["claude-plan.send"] = nil
-    send = require("claude-plan.send")
+    package.loaded["scrawl.note"] = nil
+    package.loaded["scrawl.send"] = nil
+    send = require("scrawl.send")
   end)
 
   describe("capture", function()
@@ -16,7 +16,7 @@ describe("note", function()
       local original_input = vim.ui.input
       vim.ui.input = function(_, callback) callback("this is a test note") end
 
-      require("claude-plan.note").capture()
+      require("scrawl.note").capture()
 
       vim.ui.input = original_input
 
@@ -32,7 +32,7 @@ describe("note", function()
       local original_input = vim.ui.input
       vim.ui.input = function(_, callback) callback("") end
 
-      require("claude-plan.note").capture()
+      require("scrawl.note").capture()
 
       vim.ui.input = original_input
 
@@ -48,7 +48,7 @@ describe("note", function()
       local original_input = vim.ui.input
       vim.ui.input = function(_, callback) callback(nil) end
 
-      require("claude-plan.note").capture()
+      require("scrawl.note").capture()
 
       vim.ui.input = original_input
 
@@ -63,7 +63,7 @@ describe("note", function()
       local original_input = vim.ui.input
       vim.ui.input = function(_, callback) callback("test") end
 
-      require("claude-plan.note").capture()
+      require("scrawl.note").capture()
 
       vim.ui.input = original_input
 
@@ -76,8 +76,8 @@ describe("note", function()
       send.text = function(str) table.insert(sent, str) end
 
       -- mock context to simulate visual selection
-      package.loaded["claude-plan.context"] = nil
-      local context = require("claude-plan.context")
+      package.loaded["scrawl.context"] = nil
+      local context = require("scrawl.context")
       local original_get = context.get
       context.get = function()
         return { file = "models/review/index.js", line = 10, selection = "const x = 1;", start_line = 10, end_line = 12 }
@@ -86,7 +86,7 @@ describe("note", function()
       local original_input = vim.ui.input
       vim.ui.input = function(_, callback) callback("this needs refactoring") end
 
-      require("claude-plan.note").capture()
+      require("scrawl.note").capture()
 
       vim.ui.input = original_input
       context.get = original_get
@@ -102,8 +102,8 @@ describe("note", function()
       local sent = {}
       send.text = function(str) table.insert(sent, str) end
 
-      package.loaded["claude-plan.context"] = nil
-      local context = require("claude-plan.context")
+      package.loaded["scrawl.context"] = nil
+      local context = require("scrawl.context")
       local original_get = context.get
       context.get = function()
         return { file = "index.js", line = 5, selection = "return true;", start_line = 5, end_line = 5 }
@@ -112,7 +112,7 @@ describe("note", function()
       local original_input = vim.ui.input
       vim.ui.input = function(_, callback) callback("") end
 
-      require("claude-plan.note").capture()
+      require("scrawl.note").capture()
 
       vim.ui.input = original_input
       context.get = original_get
@@ -126,8 +126,8 @@ describe("note", function()
       local sent = {}
       send.text = function(str) table.insert(sent, str) end
 
-      package.loaded["claude-plan.context"] = nil
-      local context = require("claude-plan.context")
+      package.loaded["scrawl.context"] = nil
+      local context = require("scrawl.context")
       local original_get = context.get
       context.get = function()
         return { file = "lua/init.lua", line = 1, selection = "local M = {}", start_line = 1, end_line = 1 }
@@ -136,7 +136,7 @@ describe("note", function()
       local original_input = vim.ui.input
       vim.ui.input = function(_, callback) callback("") end
 
-      require("claude-plan.note").capture()
+      require("scrawl.note").capture()
 
       vim.ui.input = original_input
       context.get = original_get
@@ -149,8 +149,8 @@ describe("note", function()
       local sent = {}
       send.text = function(str) table.insert(sent, str) end
 
-      package.loaded["claude-plan.context"] = nil
-      local context = require("claude-plan.context")
+      package.loaded["scrawl.context"] = nil
+      local context = require("scrawl.context")
       local original_get = context.get
       context.get = function()
         return { file = "data.xyz", line = 1, selection = "stuff", start_line = 1, end_line = 1 }
@@ -159,7 +159,7 @@ describe("note", function()
       local original_input = vim.ui.input
       vim.ui.input = function(_, callback) callback("") end
 
-      require("claude-plan.note").capture()
+      require("scrawl.note").capture()
 
       vim.ui.input = original_input
       context.get = original_get
@@ -178,7 +178,7 @@ describe("note", function()
       local original_input = vim.ui.input
       vim.ui.input = function(_, callback) callback("use boolean field") end
 
-      require("claude-plan.note").decision()
+      require("scrawl.note").decision()
 
       vim.ui.input = original_input
 
@@ -195,7 +195,7 @@ describe("note", function()
       local original_input = vim.ui.input
       vim.ui.input = function(_, callback) callback(nil) end
 
-      require("claude-plan.note").decision()
+      require("scrawl.note").decision()
 
       vim.ui.input = original_input
 
@@ -209,7 +209,7 @@ describe("note", function()
       local original_input = vim.ui.input
       vim.ui.input = function(_, callback) callback("") end
 
-      require("claude-plan.note").decision()
+      require("scrawl.note").decision()
 
       vim.ui.input = original_input
 
@@ -220,8 +220,8 @@ describe("note", function()
       local sent = {}
       send.text = function(str) table.insert(sent, str) end
 
-      package.loaded["claude-plan.context"] = nil
-      local context = require("claude-plan.context")
+      package.loaded["scrawl.context"] = nil
+      local context = require("scrawl.context")
       local original_get = context.get
       context.get = function()
         return { file = "src/auth.ts", line = 20, selection = "if (!token) return;", start_line = 20, end_line = 22 }
@@ -230,7 +230,7 @@ describe("note", function()
       local original_input = vim.ui.input
       vim.ui.input = function(_, callback) callback("remove this guard") end
 
-      require("claude-plan.note").decision()
+      require("scrawl.note").decision()
 
       vim.ui.input = original_input
       context.get = original_get
@@ -247,8 +247,8 @@ describe("note", function()
       local sent = {}
       send.text = function(str) table.insert(sent, str) end
 
-      package.loaded["claude-plan.context"] = nil
-      local context = require("claude-plan.context")
+      package.loaded["scrawl.context"] = nil
+      local context = require("scrawl.context")
       local original_get = context.get
       context.get = function()
         return { file = "src/auth.ts", line = 20, selection = "if (!token) return;", start_line = 20, end_line = 22 }
@@ -257,7 +257,7 @@ describe("note", function()
       local original_input = vim.ui.input
       vim.ui.input = function(_, callback) callback(nil) end
 
-      require("claude-plan.note").decision()
+      require("scrawl.note").decision()
 
       vim.ui.input = original_input
       context.get = original_get

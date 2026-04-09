@@ -9,10 +9,10 @@ Append a note to the active planning session's `notes.md` file.
 
 ## Finding the notes file
 
-Look in `~/.claude-plan/specs/` for the current repo's most recently modified `notes.md`:
+Look in `~/.scrawl/specs/` for the current repo's most recently modified `notes.md`:
 
 ```bash
-find ~/.claude-plan/specs/$(basename $(git rev-parse --show-toplevel)) -name "notes.md" -type f -exec ls -t {} + | head -1
+find ~/.scrawl/specs/$(basename $(git rev-parse --show-toplevel)) -name "notes.md" -type f -exec ls -t {} + | head -1
 ```
 
 ## Format

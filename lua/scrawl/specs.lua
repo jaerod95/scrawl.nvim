@@ -1,6 +1,6 @@
 local M = {}
 
-local specs_root = vim.fn.expand("~/.claude-plan/specs")
+local specs_root = vim.fn.expand("~/.scrawl/specs")
 
 local function get_repo_name()
   local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
@@ -55,12 +55,12 @@ end
 function M.pick()
   local repo = get_repo_name()
   if not repo then
-    return print("claude-plan: not in a git repository")
+    return print("scrawl: not in a git repository")
   end
 
   local spec_dir = specs_root .. "/" .. repo
   if vim.fn.isdirectory(spec_dir) == 0 then
-    return print("claude-plan: no specs found for " .. repo)
+    return print("scrawl: no specs found for " .. repo)
   end
 
   require("telescope.builtin").find_files({
@@ -86,13 +86,13 @@ end
 function M.open_notes()
   local repo = get_repo_name()
   if not repo then
-    return print("claude-plan: not in a git repository")
+    return print("scrawl: not in a git repository")
   end
 
   local spec_dir = specs_root .. "/" .. repo
   local result = vim.fn.systemlist("find " .. spec_dir .. " -name notes.md -type f -exec ls -t {} + 2>/dev/null")
   if #result == 0 or result[1] == "" then
-    return print("claude-plan: no notes found for " .. repo)
+    return print("scrawl: no notes found for " .. repo)
   end
 
   vim.cmd("edit " .. result[1])

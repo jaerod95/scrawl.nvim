@@ -1,5 +1,5 @@
-local context = require("claude-plan.context")
-local window = require("claude-plan.window")
+local context = require("scrawl.context")
+local window = require("scrawl.window")
 
 local M = {}
 
@@ -15,7 +15,7 @@ end
 function M.text(str)
   local chan = window.get_chan()
   if not chan then
-    return print("claude-plan: no active session. Start with toggle() first")
+    return print("scrawl: no active session. Start with toggle() first")
   end
   vim.api.nvim_chan_send(chan, str .. "\r")
 end
@@ -23,7 +23,7 @@ end
 function M.question()
   local chan = window.get_chan()
   if not chan then
-    return print("claude-plan: no active session. Start with toggle() first")
+    return print("scrawl: no active session. Start with toggle() first")
   end
 
   local ctx = context.get()
@@ -44,10 +44,10 @@ end
 function M.clear()
   local chan = window.get_chan()
   if not chan then
-    return print("claude-plan: no active session. Start with toggle() first")
+    return print("scrawl: no active session. Start with toggle() first")
   end
   vim.api.nvim_chan_send(chan, "/clear\r")
-  print("claude-plan: session cleared")
+  print("scrawl: session cleared")
 end
 
 return M

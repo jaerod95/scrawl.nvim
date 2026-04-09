@@ -1,6 +1,6 @@
-local claude = require("claude-plan")
+local claude = require("scrawl")
 
-describe("claude-plan", function()
+describe("scrawl", function()
   describe("API surface", function()
     it("exports setup function", function()
       assert.is_function(claude.setup)

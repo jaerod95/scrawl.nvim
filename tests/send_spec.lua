@@ -1,4 +1,4 @@
-local send = require("claude-plan.send")
+local send = require("scrawl.send")
 
 describe("send", function()
   describe("text", function()
@@ -30,8 +30,8 @@ describe("send", function()
 
     it("sends /clear to terminal and prints confirmation", function()
       local sent = {}
-      package.loaded["claude-plan.window"] = nil
-      local window = require("claude-plan.window")
+      package.loaded["scrawl.window"] = nil
+      local window = require("scrawl.window")
       local original_get_chan = window.get_chan
       window.get_chan = function() return 42 end
 
@@ -42,8 +42,8 @@ describe("send", function()
       local original_print = print
       _G.print = function(msg) table.insert(messages, msg) end
 
-      package.loaded["claude-plan.send"] = nil
-      require("claude-plan.send").clear()
+      package.loaded["scrawl.send"] = nil
+      require("scrawl.send").clear()
 
       _G.print = original_print
       vim.api.nvim_chan_send = original_chan_send

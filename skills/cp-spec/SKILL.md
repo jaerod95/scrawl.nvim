@@ -9,10 +9,10 @@ Write a spec document from the captured planning notes.
 
 ## Finding the notes file
 
-Look in `~/.claude-plan/specs/` for the current repo's most recently modified `notes.md`:
+Look in `~/.scrawl/specs/` for the current repo's most recently modified `notes.md`:
 
 ```bash
-find ~/.claude-plan/specs/$(basename $(git rev-parse --show-toplevel)) -name "notes.md" -type f -exec ls -t {} + | head -1
+find ~/.scrawl/specs/$(basename $(git rev-parse --show-toplevel)) -name "notes.md" -type f -exec ls -t {} + | head -1
 ```
 
 ## Writing the spec
