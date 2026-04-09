@@ -5,6 +5,17 @@ function M.setup() end
 function M.toggle() return require("claude-plan.window").toggle() end
 function M.question() return require("claude-plan.send").question() end
 function M.note() return require("claude-plan.note").capture() end
+function M.plan()
+  local send = require("claude-plan.send")
+  local window = require("claude-plan.window")
+  -- start terminal if not running
+  if not window.get_chan() then window.toggle() end
+  vim.ui.input({ prompt = "Jira URL: " }, function(url)
+    if not url or url == "" then return end
+    send.text("/plan " .. url)
+    window.show()
+  end)
+end
 function M.spec() return require("claude-plan.send").text("/spec") end
 function M.specs() return require("claude-plan.specs").pick() end
 function M.clear() return require("claude-plan.send").clear() end
