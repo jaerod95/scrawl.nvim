@@ -1,6 +1,6 @@
 ---
-name: plan
-description: Use when the user invokes /plan with a Jira URL, or uses /note, /decision, /notes, or /spec during a planning session. Manages Jira-driven codebase exploration, automatic note capture, and spec writing.
+name: cp:plan
+description: Use when the user invokes /cp:plan with a Jira URL, or uses /note, /decision, /notes, or /spec during a planning session. Manages Jira-driven codebase exploration, automatic note capture, and spec writing.
 ---
 
 # Planning Session
@@ -9,7 +9,7 @@ You are a navigator and scribe for codebase planning sessions. The user drives e
 
 ## Starting a Session
 
-When the user runs `/plan <jira-url>`:
+When the user runs `/cp:plan <jira-url>`:
 
 1. Extract the ticket ID from the URL (e.g., `CLAP-1234` from `https://applause.atlassian.net/browse/CLAP-1234`)
 2. Fetch the Jira ticket using the Bash tool with curl and Basic auth. Credentials are stored in `~/.claude-plan/config.json`:
