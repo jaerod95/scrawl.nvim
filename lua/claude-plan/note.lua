@@ -6,6 +6,15 @@ local M = {}
 function M.capture()
   local ctx = context.get()
 
+  if ctx.selection then
+    local lines = string.format("%d-%d", ctx.start_line, ctx.end_line)
+    vim.ui.input({ prompt = "Note: " }, function(input)
+      local note = input and input ~= "" and (input .. "\n") or ""
+      send.text(string.format("/cp-note [%s:%s]\n%s```\n%s\n```", ctx.file, lines, note, ctx.selection))
+    end)
+    return
+  end
+
   vim.ui.input({ prompt = "Note: " }, function(input)
     if input and input ~= "" then
       send.text(string.format("/cp-note [%s:%d] %s", ctx.file, ctx.line, input))

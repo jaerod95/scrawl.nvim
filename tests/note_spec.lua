@@ -70,6 +70,57 @@ describe("note", function()
       assert.are.equal(1, #sent)
       assert.is_truthy(sent[1]:find("%[.*:%d+%]"))
     end)
+
+    it("includes code block with selection when in visual mode", function()
+      local sent = {}
+      send.text = function(str) table.insert(sent, str) end
+
+      -- mock context to simulate visual selection
+      package.loaded["claude-plan.context"] = nil
+      local context = require("claude-plan.context")
+      local original_get = context.get
+      context.get = function()
+        return { file = "models/review/index.js", line = 10, selection = "const x = 1;", start_line = 10, end_line = 12 }
+      end
+
+      local original_input = vim.ui.input
+      vim.ui.input = function(_, callback) callback("this needs refactoring") end
+
+      require("claude-plan.note").capture()
+
+      vim.ui.input = original_input
+      context.get = original_get
+
+      assert.are.equal(1, #sent)
+      assert.is_truthy(sent[1]:find("10%-12"))
+      assert.is_truthy(sent[1]:find("```"))
+      assert.is_truthy(sent[1]:find("const x = 1;"))
+      assert.is_truthy(sent[1]:find("this needs refactoring"))
+    end)
+
+    it("includes code block without note text when selection and empty input", function()
+      local sent = {}
+      send.text = function(str) table.insert(sent, str) end
+
+      package.loaded["claude-plan.context"] = nil
+      local context = require("claude-plan.context")
+      local original_get = context.get
+      context.get = function()
+        return { file = "index.js", line = 5, selection = "return true;", start_line = 5, end_line = 5 }
+      end
+
+      local original_input = vim.ui.input
+      vim.ui.input = function(_, callback) callback("") end
+
+      require("claude-plan.note").capture()
+
+      vim.ui.input = original_input
+      context.get = original_get
+
+      assert.are.equal(1, #sent)
+      assert.is_truthy(sent[1]:find("```"))
+      assert.is_truthy(sent[1]:find("return true;"))
+    end)
   end)
 
   describe("decision", function()
