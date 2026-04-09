@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# SessionStart hook for scrawl plugin
+# Surfaces active planning session context to Claude at conversation start
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+# Detect current repo name from git
+repo_name=""
+if git rev-parse --show-toplevel >/dev/null 2>&1; then
+  repo_name=$(basename "$(git rev-parse --show-toplevel)")
+fi
+
+# Check for active planning session
+session_context=""
+if [ -n "$repo_name" ] && [ -d "${HOME}/.scrawl/specs/${repo_name}" ]; then
+  notes_file=$(find "${HOME}/.scrawl/specs/${repo_name}" -name "notes.md" -type f -exec ls -t {} + 2>/dev/null | head -1)
+  if [ -n "$notes_file" ]; then
+    ticket_dir=$(basename "$(dirname "$notes_file")")
+    session_context="Active scrawl planning session: ${ticket_dir} in ${repo_name}. Notes file: ${notes_file}. Use /scrawl-notes to view, /scrawl-note to capture, /scrawl-spec to write spec."
+  fi
+fi
+
+# Build skill list
+skill_list="Available scrawl skills: /scrawl-plan (start planning session), /scrawl-note (capture note), /scrawl-decision (capture decision), /scrawl-notes (show notes), /scrawl-spec (write spec)."
+
+# Combine context
+additional_context="${skill_list}"
+if [ -n "$session_context" ]; then
+  additional_context="${session_context}\\n${skill_list}"
+fi
+
+# Escape for JSON
+escape_for_json() {
+  local s="$1"
+  s="${s//\\/\\\\}"
+  s="${s//\"/\\\"}"
+  s="${s//$'\n'/\\n}"
+  s="${s//$'\r'/\\r}"
+  s="${s//$'\t'/\\t}"
+  printf '%s' "$s"
+}
+
+escaped=$(escape_for_json "$additional_context")
+
+# Output in platform-appropriate format
+if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
+  printf '{\n  "additional_context": "%s"\n}\n' "$escaped"
+elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
+  printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$escaped"
+else
+  printf '{\n  "additionalContext": "%s"\n}\n' "$escaped"
+fi
+
+exit 0

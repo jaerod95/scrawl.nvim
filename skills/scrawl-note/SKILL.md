@@ -1,6 +1,8 @@
 ---
 name: scrawl-note
-description: Use when the user invokes /scrawl-note to capture a planning note. Appends to the current planning session's notes.md file.
+description: >-
+  Use when the user invokes /scrawl-note to capture a planning note.
+  Appends to the current planning session notes.md file.
 ---
 
 # Capture Note
@@ -19,16 +21,17 @@ find ~/.scrawl/specs/$(basename $(git rev-parse --show-toplevel)) -name "notes.m
 
 The argument may include editor context in brackets. Two formats are possible:
 
-### Simple note: `/scrawl-note [file:line] text`
+### Simple note
 
-### Visual selection note (multi-line):
-```
-/scrawl-note [file:start-end]
-optional text
-```
-selected code
-```
-```
+    /scrawl-note [file:line] text
+
+### Visual selection note (multi-line)
+
+    /scrawl-note [file:start-end]
+    optional text
+    ```lang
+    selected code
+    ```
 
 ## Rules
 

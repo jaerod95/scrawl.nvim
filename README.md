@@ -2,6 +2,8 @@
 
 A Neovim plugin for collaborative planning sessions with [Claude Code](https://claude.ai/claude-code). Scrawl lets you explore codebases, capture notes, make decisions, and write specs — all from inside your editor with Claude as your pair programmer.
 
+![scrawl.nvim demo](demo/scrawl-demo.gif)
+
 ## Features
 
 - **Planning sessions** — Start a Jira-driven exploration session with Claude

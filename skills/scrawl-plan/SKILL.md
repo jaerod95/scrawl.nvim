@@ -1,6 +1,9 @@
 ---
 name: scrawl-plan
-description: Use when the user invokes /scrawl-plan with a Jira URL. Manages Jira-driven codebase exploration and automatic note capture. Related commands: /scrawl-note, /scrawl-decision, /scrawl-notes, /scrawl-spec.
+description: >-
+  Use when the user invokes /scrawl-plan with a Jira URL.
+  Manages Jira-driven codebase exploration and automatic note capture.
+  Related commands /scrawl-note, /scrawl-decision, /scrawl-notes, /scrawl-spec.
 ---
 
 # Planning Session

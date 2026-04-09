@@ -5,6 +5,28 @@ All notable changes to scrawl.nvim will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-04-09
+
+### Changed
+
+- Renamed all skills from `cp-*` to `scrawl-*` namespace
+- Genericized Jira integration (org is now configurable via `~/.scrawl/config.json`)
+- Enriched plugin.json with full metadata (author, repository, license, keywords)
+- Fixed YAML frontmatter in skill files
+- Fixed broken markdown rendering in scrawl-note skill
+
+### Added
+
+- SessionStart hook that surfaces active planning session context to Claude
+- Cross-platform hook support (Claude Code, Cursor, Copilot CLI)
+- Demo gif in README
+
+### Removed
+
+- Legacy `my-claude-agents` plugin directory
+- Repo-specific reference files (api-gateway, integration-hub)
+- Old spec directory
+
 ## [0.1.0] - 2026-04-09
 
 Initial public release.

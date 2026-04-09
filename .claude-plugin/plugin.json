@@ -1,7 +1,19 @@
 {
-  "name": "scrawl.nvim",
-  "description": "Neovim plugin for collaborative planning sessions with Claude Code",
-  "version": "0.1.0",
-  "skills": "./skills/",
-  "marketplace": true
+  "name": "scrawl",
+  "description": "Planning sessions with Claude Code — explore codebases, capture notes, write specs",
+  "version": "0.2.0",
+  "author": {
+    "name": "Jason Rodriguez",
+    "email": "jason.eli.rodriguez@gmail.com"
+  },
+  "homepage": "https://github.com/jaerod95/scrawl.nvim",
+  "repository": "https://github.com/jaerod95/scrawl.nvim",
+  "license": "MIT",
+  "keywords": [
+    "planning",
+    "notes",
+    "specs",
+    "neovim",
+    "skills"
+  ]
 }
