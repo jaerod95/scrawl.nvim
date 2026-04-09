@@ -49,9 +49,12 @@ function M.toggle()
     end,
   })
 
-  -- <C-b> exits terminal mode (user's existing binding), then normal-mode
-  -- toggle keybinding hides the window. We also add a buffer-local normal-mode
-  -- mapping so 'q' closes the window after exiting terminal mode.
+  -- First <C-b> exits terminal mode (user's existing binding).
+  -- Second <C-b> (now normal mode) closes the window. Double-tap to dismiss.
+  vim.api.nvim_buf_set_keymap(buf, "n", "<C-b>", "", {
+    callback = M.toggle,
+    silent = true,
+  })
   vim.api.nvim_buf_set_keymap(buf, "n", "q", "", {
     callback = M.toggle,
     silent = true,
