@@ -1,0 +1,7 @@
+{
+  "name": "scrawl.nvim",
+  "description": "Neovim plugin for collaborative planning sessions with Claude Code",
+  "version": "0.1.0",
+  "skills": "./skills/",
+  "marketplace": true
+}

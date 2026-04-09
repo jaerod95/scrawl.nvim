@@ -1,0 +1,14 @@
+{
+  "name": "scrawl",
+  "owner": {
+    "name": "Jason Rodriguez"
+  },
+  "plugins": [
+    {
+      "name": "scrawl",
+      "description": "Planning and implementation agents for codebase exploration",
+      "source": ".",
+      "category": "development"
+    }
+  ]
+}
