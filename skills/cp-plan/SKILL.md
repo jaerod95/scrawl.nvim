@@ -32,13 +32,33 @@ Extract from the response: `fields.summary` (title), `fields.description` (ADF f
 3. Detect the current repo from the working directory name
 4. Read the matching repo reference file from the plugin's `skills/plan/references/{repo-name}.md` if it exists
 5. Create the spec folder: `~/.claude-plan/specs/{repo-name}/{ticket-id}/`
-6. Create `notes.md` with this header:
+6. Create `notes.md` with a context section that includes all the Jira ticket info, followed by the notes section:
 
 ```markdown
 # {ticket-id}: {ticket-title}
 
 URL: {jira-url}
 Started: {YYYY-MM-DD HH:MM}
+
+## Context
+
+**Status:** {status}
+**Assignee:** {assignee}
+**Priority:** {priority}
+
+### Description
+{description converted from ADF to plain text}
+
+### Acceptance Criteria
+{acceptance criteria if present in description, otherwise omit this heading}
+
+### Subtasks
+{list of subtasks if any, otherwise omit this heading}
+- [ ] {subtask summary} ({subtask status})
+
+### Comments
+{recent comments if any, otherwise omit this heading}
+- **{author}** ({date}): {comment text}
 
 ## Notes
 ```
