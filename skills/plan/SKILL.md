@@ -12,7 +12,23 @@ You are a navigator and scribe for codebase planning sessions. The user drives e
 When the user runs `/plan <jira-url>`:
 
 1. Extract the ticket ID from the URL (e.g., `CLAP-1234` from `https://applause.atlassian.net/browse/CLAP-1234`)
-2. Fetch the Jira ticket using the Atlassian MCP integration — get title, description, acceptance criteria, subtasks, comments, status, assignee, priority
+2. Fetch the Jira ticket using the Bash tool with curl and Basic auth. Credentials are stored in `~/.claude-plan/config.json`:
+
+```json
+{
+  "jiraUsername": "user@example.com",
+  "jiraAccessToken": "your-api-token"
+}
+```
+
+If the config file doesn't exist or is missing credentials, tell the user to create it and generate an API token at https://id.atlassian.com/manage-profile/security/api-tokens.
+
+Fetch command:
+```bash
+curl -s -u "{username}:{token}" -H "Accept: application/json" "https://applause.atlassian.net/rest/api/3/issue/{ticket-id}"
+```
+
+Extract from the response: `fields.summary` (title), `fields.description` (ADF format — convert to plain text), `fields.status.name`, `fields.assignee.displayName`, `fields.priority.name`, `fields.comment.comments`, and any subtasks from `fields.subtasks`.
 3. Detect the current repo from the working directory name
 4. Read the matching repo reference file from the plugin's `skills/plan/references/{repo-name}.md` if it exists
 5. Create the spec folder: `~/.claude-plan/specs/{repo-name}/{ticket-id}/`
