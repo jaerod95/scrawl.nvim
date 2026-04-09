@@ -1,7 +1,7 @@
 {
   "name": "scrawl",
   "description": "Planning sessions with Claude Code — explore codebases, capture notes, write specs",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": {
     "name": "Jason Rodriguez",
     "email": "jason.eli.rodriguez@gmail.com"
