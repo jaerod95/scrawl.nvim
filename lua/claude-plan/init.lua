@@ -19,6 +19,8 @@ function M.plan()
     window.show()
   end)
 end
+function M.decision() return require("claude-plan.note").decision() end
+function M.notes() return require("claude-plan.send").text("/notes") end
 function M.spec() return require("claude-plan.send").text("/spec") end
 function M.specs() return require("claude-plan.specs").pick() end
 function M.clear() return require("claude-plan.send").clear() end

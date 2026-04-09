@@ -18,6 +18,14 @@ describe("claude-plan", function()
       assert.is_function(claude.note)
     end)
 
+    it("exports decision function", function()
+      assert.is_function(claude.decision)
+    end)
+
+    it("exports notes function", function()
+      assert.is_function(claude.notes)
+    end)
+
     it("exports spec function", function()
       assert.is_function(claude.spec)
     end)
