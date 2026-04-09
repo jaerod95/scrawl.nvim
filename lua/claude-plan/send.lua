@@ -6,7 +6,8 @@ local M = {}
 local function build_prompt(ctx, input)
   local file_ref = string.format("@%s:%d", ctx.file, ctx.line)
   if ctx.selection then
-    return string.format("%s\n```\n%s\n```\n%s", file_ref, ctx.selection, input)
+    local lang = context.lang(ctx.file)
+    return string.format("%s\n```%s\n%s\n```\n%s", file_ref, lang, ctx.selection, input)
   end
   return string.format("%s %s", file_ref, input)
 end
@@ -41,6 +42,11 @@ function M.question()
 end
 
 function M.clear()
+  local chan = window.get_chan()
+  if not chan then
+    return print("claude-plan: no active session. Start with toggle() first")
+  end
+  vim.api.nvim_chan_send(chan, "/clear\r")
   print("claude-plan: session cleared")
 end
 
