@@ -20,7 +20,7 @@ function M.plan()
   end)
 end
 function M.decision() return require("claude-plan.note").decision() end
-function M.notes() return require("claude-plan.send").text("/cp-notes") end
+function M.notes() return require("claude-plan.specs").open_notes() end
 function M.spec() return require("claude-plan.send").text("/cp-spec") end
 function M.specs() return require("claude-plan.specs").pick() end
 function M.clear() return require("claude-plan.send").clear() end

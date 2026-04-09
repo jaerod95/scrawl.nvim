@@ -83,4 +83,19 @@ function M.pick()
   })
 end
 
+function M.open_notes()
+  local repo = get_repo_name()
+  if not repo then
+    return print("claude-plan: not in a git repository")
+  end
+
+  local spec_dir = specs_root .. "/" .. repo
+  local result = vim.fn.systemlist("find " .. spec_dir .. " -name notes.md -type f -exec ls -t {} + 2>/dev/null")
+  if #result == 0 or result[1] == "" then
+    return print("claude-plan: no notes found for " .. repo)
+  end
+
+  vim.cmd("edit " .. result[1])
+end
+
 return M
