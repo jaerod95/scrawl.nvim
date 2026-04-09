@@ -15,7 +15,7 @@ function M.plan()
   if not window.get_chan() then window.toggle() end
   vim.ui.input({ prompt = "Jira URL: " }, function(url)
     if not url or url == "" then return end
-    send.text("/cp:plan " .. url)
+    send.text("/cp-plan " .. url)
     window.show()
   end)
 end
