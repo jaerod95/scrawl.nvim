@@ -1,0 +1,5 @@
+{
+  "name": "my-claude-agents",
+  "description": "Personal planning and implementation agents",
+  "skills": "./skills/"
+}
