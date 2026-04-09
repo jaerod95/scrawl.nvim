@@ -1,0 +1,14 @@
+{
+  "name": "my-claude-agents",
+  "owner": {
+    "name": "Jason Rodriguez"
+  },
+  "plugins": [
+    {
+      "name": "my-claude-agents",
+      "description": "Planning and implementation agents for codebase exploration",
+      "source": "./plugins/my-claude-agents",
+      "category": "development"
+    }
+  ]
+}
