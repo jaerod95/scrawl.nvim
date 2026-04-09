@@ -3,6 +3,7 @@ local M = {}
 local buf = nil
 local win = nil
 local chan = nil
+local skip_permissions = true
 
 local function create_float(target_buf)
   local width = math.floor(vim.o.columns * 0.8)
@@ -43,7 +44,8 @@ function M.toggle()
   buf = vim.api.nvim_create_buf(false, true)
   create_float(buf)
 
-  chan = vim.fn.termopen("claude", {
+  local cmd = skip_permissions and "claude --dangerously-skip-permissions" or "claude"
+  chan = vim.fn.termopen(cmd, {
     on_exit = function()
       buf, win, chan = nil, nil, nil
     end,
@@ -84,6 +86,12 @@ function M.show()
   if buf and vim.api.nvim_buf_is_valid(buf) then
     create_float(buf)
     vim.cmd("startinsert")
+  end
+end
+
+function M.configure(opts)
+  if opts.skip_permissions ~= nil then
+    skip_permissions = opts.skip_permissions
   end
 end
 

@@ -1,6 +1,9 @@
 local M = {}
 
-function M.setup() end
+function M.setup(opts)
+  opts = opts or {}
+  require("claude-plan.window").configure(opts)
+end
 
 function M.toggle() return require("claude-plan.window").toggle() end
 function M.question() return require("claude-plan.send").question() end
