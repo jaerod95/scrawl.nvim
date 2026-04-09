@@ -19,12 +19,12 @@ if [ -n "$repo_name" ] && [ -d "${HOME}/.scrawl/specs/${repo_name}" ]; then
   notes_file=$(find "${HOME}/.scrawl/specs/${repo_name}" -name "notes.md" -type f -exec ls -t {} + 2>/dev/null | head -1)
   if [ -n "$notes_file" ]; then
     ticket_dir=$(basename "$(dirname "$notes_file")")
-    session_context="Active scrawl planning session: ${ticket_dir} in ${repo_name}. Notes file: ${notes_file}. Use /scrawl-notes to view, /scrawl-note to capture, /scrawl-spec to write spec."
+    session_context="Active scrawl planning session: ${ticket_dir} in ${repo_name}. Notes file: ${notes_file}. Use /scrawl:notes to view, /scrawl:note to capture, /scrawl:spec to write spec."
   fi
 fi
 
 # Build skill list
-skill_list="Available scrawl skills: /scrawl-plan (start planning session), /scrawl-note (capture note), /scrawl-decision (capture decision), /scrawl-notes (show notes), /scrawl-spec (write spec)."
+skill_list="Available scrawl skills: /scrawl:plan (start planning session), /scrawl:note (capture note), /scrawl:decision (capture decision), /scrawl:notes (show notes), /scrawl:spec (write spec)."
 
 # Combine context
 additional_context="${skill_list}"

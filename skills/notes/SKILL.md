@@ -1,6 +1,6 @@
 ---
-name: scrawl-notes
-description: Use when the user invokes /scrawl-notes to display all captured planning notes for the current session.
+name: notes
+description: Use when the user invokes /scrawl:notes to display all captured planning notes for the current session.
 ---
 
 # Show Notes

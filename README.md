@@ -100,11 +100,11 @@ vim.keymap.set("n", "<leader>cr", scrawl.reload, { desc = "Reload plugin and res
 
 scrawl.nvim includes Claude Code skills that teach Claude how to handle the commands sent from Neovim:
 
-- `/scrawl-plan` — Start a planning session from a Jira ticket
-- `/scrawl-note` — Capture a note with file context
-- `/scrawl-decision` — Capture a decision
-- `/scrawl-notes` — Display captured notes
-- `/scrawl-spec` — Write a spec from notes
+- `/scrawl:plan` — Start a planning session from a Jira ticket
+- `/scrawl:note` — Capture a note with file context
+- `/scrawl:decision` — Capture a decision
+- `/scrawl:notes` — Display captured notes
+- `/scrawl:spec` — Write a spec from notes
 
 ## Data Storage
 

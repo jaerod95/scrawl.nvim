@@ -1,6 +1,6 @@
 ---
-name: scrawl-decision
-description: Use when the user invokes /scrawl-decision to capture a planning decision. Appends a DECISION-prefixed note to the current planning session's notes.md file.
+name: decision
+description: Use when the user invokes /scrawl:decision to capture a planning decision. Appends a DECISION-prefixed note to the current planning session's notes.md file.
 ---
 
 # Capture Decision
@@ -17,7 +17,7 @@ find ~/.scrawl/specs/$(basename $(git rev-parse --show-toplevel)) -name "notes.m
 
 ## Format
 
-The argument may include editor context in brackets: `/scrawl-decision [file:line] text`
+The argument may include editor context in brackets: `/scrawl:decision [file:line] text`
 
 - If a file context is provided, group under a `### {file}` heading in notes.md
 - If no file context, put it under `### General`

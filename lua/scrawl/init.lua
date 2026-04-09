@@ -15,13 +15,13 @@ function M.plan()
   if not window.get_chan() then window.toggle() end
   vim.ui.input({ prompt = "Jira URL: " }, function(url)
     if not url or url == "" then return end
-    send.text("/scrawl-plan " .. url)
+    send.text("/scrawl:plan " .. url)
     window.show()
   end)
 end
 function M.decision() return require("scrawl.note").decision() end
 function M.notes() return require("scrawl.specs").open_notes() end
-function M.spec() return require("scrawl.send").text("/scrawl-spec") end
+function M.spec() return require("scrawl.send").text("/scrawl:spec") end
 function M.specs() return require("scrawl.specs").pick() end
 function M.clear() return require("scrawl.send").clear() end
 function M.reload()

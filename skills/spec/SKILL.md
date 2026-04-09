@@ -1,6 +1,6 @@
 ---
-name: scrawl-spec
-description: Use when the user invokes /scrawl-spec to write a planning spec from captured notes.
+name: spec
+description: Use when the user invokes /scrawl:spec to write a planning spec from captured notes.
 ---
 
 # Write Spec

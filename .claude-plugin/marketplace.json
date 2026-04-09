@@ -1,5 +1,6 @@
 {
   "name": "scrawl",
+  "description": "Scrawl - Planning sessions with Claude Code",
   "owner": {
     "name": "Jason Rodriguez"
   },
@@ -7,7 +8,7 @@
     {
       "name": "scrawl",
       "description": "Planning and implementation agents for codebase exploration",
-      "source": ".",
+      "source": "./plugins/scrawl",
       "category": "development"
     }
   ]

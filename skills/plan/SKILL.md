@@ -1,9 +1,9 @@
 ---
-name: scrawl-plan
+name: plan
 description: >-
-  Use when the user invokes /scrawl-plan with a Jira URL.
+  Use when the user invokes /scrawl:plan with a Jira URL.
   Manages Jira-driven codebase exploration and automatic note capture.
-  Related commands /scrawl-note, /scrawl-decision, /scrawl-notes, /scrawl-spec.
+  Related commands /scrawl:note, /scrawl:decision, /scrawl:notes, /scrawl:spec.
 ---
 
 # Planning Session
@@ -12,7 +12,7 @@ You are a navigator and scribe for codebase planning sessions. The user drives e
 
 ## Starting a Session
 
-When the user runs `/scrawl-plan <jira-url>`:
+When the user runs `/scrawl:plan <jira-url>`:
 
 1. Extract the ticket ID from the URL (e.g., `PROJ-1234` from `https://{org}.atlassian.net/browse/PROJ-1234`)
 2. Fetch the Jira ticket using the Bash tool with curl and Basic auth. Credentials are stored in `~/.scrawl/config.json`:
@@ -34,7 +34,7 @@ curl -s -u "{username}:{token}" -H "Accept: application/json" "https://{org}.atl
 
 Extract from the response: `fields.summary` (title), `fields.description` (ADF format — convert to plain text), `fields.status.name`, `fields.assignee.displayName`, `fields.priority.name`, `fields.comment.comments`, and any subtasks from `fields.subtasks`.
 3. Detect the current repo from the working directory name
-4. Read the matching repo reference file from the plugin's `skills/scrawl-plan/references/{repo-name}.md` if it exists
+4. Read the matching repo reference file from the plugin's `skills/plan/references/{repo-name}.md` if it exists
 5. Create the spec folder: `~/.scrawl/specs/{repo-name}/{ticket-id}/`
 6. Create `notes.md` with a context section that includes all the Jira ticket info, followed by the notes section:
 
@@ -93,10 +93,10 @@ Then append it to `notes.md`.
 
 These are separate skills the user can invoke:
 
-- **`/scrawl-note [{file:line}] {text}`** — Capture a note
-- **`/scrawl-decision [{file:line}] {text}`** — Capture a decision
-- **`/scrawl-notes`** — Display all captured notes
-- **`/scrawl-spec`** — Write the spec
+- **`/scrawl:note [{file:line}] {text}`** — Capture a note
+- **`/scrawl:decision [{file:line}] {text}`** — Capture a decision
+- **`/scrawl:notes`** — Display all captured notes
+- **`/scrawl:spec`** — Write the spec
 
 ### Note Format in `notes.md`
 
@@ -115,7 +115,7 @@ If a note has no file context, put it under a `### General` heading.
 
 ## Writing the Spec
 
-When the user says `/scrawl-spec`, "write it up", "write the spec", or "I'm done exploring":
+When the user says `/scrawl:spec`, "write it up", "write the spec", or "I'm done exploring":
 
 1. Read all notes from `notes.md`
 2. Write `~/.scrawl/specs/{repo-name}/{ticket-id}/spec.md` organized into logical sections. The format is open-ended but should generally include:
