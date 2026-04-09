@@ -1,16 +1,14 @@
 local context = require("claude-plan.context")
-local response = require("claude-plan.response")
 local window = require("claude-plan.window")
 
 local M = {}
 
-local should_continue = false
-
 local function build_prompt(ctx, input)
+  local file_ref = string.format("@%s:%d", ctx.file, ctx.line)
   if ctx.selection then
-    return string.format("[context: %s:%d]\n```\n%s\n```\n%s", ctx.file, ctx.line, ctx.selection, input)
+    return string.format("%s\n```\n%s\n```\n%s", file_ref, ctx.selection, input)
   end
-  return string.format("[context: %s:%d] %s", ctx.file, ctx.line, input)
+  return string.format("%s %s", file_ref, input)
 end
 
 function M.text(str)
@@ -18,10 +16,15 @@ function M.text(str)
   if not chan then
     return print("claude-plan: no active session. Start with toggle() first")
   end
-  vim.api.nvim_chan_send(chan, str .. "\n")
+  vim.api.nvim_chan_send(chan, str .. "\r")
 end
 
 function M.question()
+  local chan = window.get_chan()
+  if not chan then
+    return print("claude-plan: no active session. Start with toggle() first")
+  end
+
   local ctx = context.get()
 
   vim.ui.input({ prompt = "Question: " }, function(input)
@@ -32,31 +35,12 @@ function M.question()
       and string.format("[%s:%d] (with selection) %s", ctx.file, ctx.line, input)
       or string.format("[%s:%d] %s", ctx.file, ctx.line, input)
 
-    response.open(display)
-
-    local cmd = { "claude", "--print" }
-    if should_continue then
-      table.insert(cmd, "--continue")
-    end
-    table.insert(cmd, "-p")
-    table.insert(cmd, prompt)
-
-    vim.fn.jobstart(cmd, {
-      stdout_buffered = false,
-      on_stdout = function(_, data)
-        if data then
-          response.append(data)
-        end
-      end,
-      on_exit = function()
-        should_continue = true
-      end,
-    })
+    vim.api.nvim_chan_send(chan, prompt .. "\r")
+    window.show()
   end)
 end
 
 function M.clear()
-  should_continue = false
   print("claude-plan: session cleared")
 end
 

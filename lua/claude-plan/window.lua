@@ -79,6 +79,14 @@ function M.status()
   return "stopped"
 end
 
+function M.show()
+  if win and vim.api.nvim_win_is_valid(win) then return end
+  if buf and vim.api.nvim_buf_is_valid(buf) then
+    create_float(buf)
+    vim.cmd("startinsert")
+  end
+end
+
 function M.get_chan() return chan end
 function M.get_buf() return buf end
 
