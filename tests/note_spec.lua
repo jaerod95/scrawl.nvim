@@ -93,7 +93,7 @@ describe("note", function()
 
       assert.are.equal(1, #sent)
       assert.is_truthy(sent[1]:find("10%-12"))
-      assert.is_truthy(sent[1]:find("```"))
+      assert.is_truthy(sent[1]:find("```javascript"))
       assert.is_truthy(sent[1]:find("const x = 1;"))
       assert.is_truthy(sent[1]:find("this needs refactoring"))
     end)
@@ -118,8 +118,55 @@ describe("note", function()
       context.get = original_get
 
       assert.are.equal(1, #sent)
-      assert.is_truthy(sent[1]:find("```"))
+      assert.is_truthy(sent[1]:find("```javascript"))
       assert.is_truthy(sent[1]:find("return true;"))
+    end)
+
+    it("includes language tag for lua files", function()
+      local sent = {}
+      send.text = function(str) table.insert(sent, str) end
+
+      package.loaded["claude-plan.context"] = nil
+      local context = require("claude-plan.context")
+      local original_get = context.get
+      context.get = function()
+        return { file = "lua/init.lua", line = 1, selection = "local M = {}", start_line = 1, end_line = 1 }
+      end
+
+      local original_input = vim.ui.input
+      vim.ui.input = function(_, callback) callback("") end
+
+      require("claude-plan.note").capture()
+
+      vim.ui.input = original_input
+      context.get = original_get
+
+      assert.are.equal(1, #sent)
+      assert.is_truthy(sent[1]:find("```lua"))
+    end)
+
+    it("uses empty language tag for unknown extensions", function()
+      local sent = {}
+      send.text = function(str) table.insert(sent, str) end
+
+      package.loaded["claude-plan.context"] = nil
+      local context = require("claude-plan.context")
+      local original_get = context.get
+      context.get = function()
+        return { file = "data.xyz", line = 1, selection = "stuff", start_line = 1, end_line = 1 }
+      end
+
+      local original_input = vim.ui.input
+      vim.ui.input = function(_, callback) callback("") end
+
+      require("claude-plan.note").capture()
+
+      vim.ui.input = original_input
+      context.get = original_get
+
+      assert.are.equal(1, #sent)
+      -- should have ``` followed by newline (no language)
+      assert.is_truthy(sent[1]:find("```\nstuff"))
     end)
   end)
 
@@ -165,6 +212,55 @@ describe("note", function()
       require("claude-plan.note").decision()
 
       vim.ui.input = original_input
+
+      assert.are.equal(0, #sent)
+    end)
+
+    it("includes code block with selection when in visual mode", function()
+      local sent = {}
+      send.text = function(str) table.insert(sent, str) end
+
+      package.loaded["claude-plan.context"] = nil
+      local context = require("claude-plan.context")
+      local original_get = context.get
+      context.get = function()
+        return { file = "src/auth.ts", line = 20, selection = "if (!token) return;", start_line = 20, end_line = 22 }
+      end
+
+      local original_input = vim.ui.input
+      vim.ui.input = function(_, callback) callback("remove this guard") end
+
+      require("claude-plan.note").decision()
+
+      vim.ui.input = original_input
+      context.get = original_get
+
+      assert.are.equal(1, #sent)
+      assert.is_truthy(sent[1]:find("/cp%-decision"))
+      assert.is_truthy(sent[1]:find("20%-22"))
+      assert.is_truthy(sent[1]:find("```typescript"))
+      assert.is_truthy(sent[1]:find("if %(!token%) return;"))
+      assert.is_truthy(sent[1]:find("remove this guard"))
+    end)
+
+    it("does nothing in visual mode when input is cancelled", function()
+      local sent = {}
+      send.text = function(str) table.insert(sent, str) end
+
+      package.loaded["claude-plan.context"] = nil
+      local context = require("claude-plan.context")
+      local original_get = context.get
+      context.get = function()
+        return { file = "src/auth.ts", line = 20, selection = "if (!token) return;", start_line = 20, end_line = 22 }
+      end
+
+      local original_input = vim.ui.input
+      vim.ui.input = function(_, callback) callback(nil) end
+
+      require("claude-plan.note").decision()
+
+      vim.ui.input = original_input
+      context.get = original_get
 
       assert.are.equal(0, #sent)
     end)
