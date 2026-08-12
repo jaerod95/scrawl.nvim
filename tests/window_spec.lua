@@ -38,6 +38,23 @@ describe("window", function()
     end)
   end)
 
+  describe("is_focused", function()
+    it("returns false when no window is open", function()
+      assert.is_false(window.is_focused())
+    end)
+
+    it("returns true while the scrawl window holds the cursor", function()
+      window.toggle()
+      assert.is_true(window.is_focused())
+    end)
+
+    it("returns false after the window is hidden", function()
+      window.toggle()
+      window.toggle()
+      assert.is_false(window.is_focused())
+    end)
+  end)
+
   describe("toggle", function()
     it("creates a buffer and window on first call", function()
       window.toggle()

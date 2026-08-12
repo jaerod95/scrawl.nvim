@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Stop hook for scrawl plugin
+# Notifies the parent Neovim instance that Claude has finished its turn.
+# Only fires for sessions running inside an nvim terminal ($NVIM is the
+# parent instance's server socket).
+
+set -uo pipefail
+
+[ -n "${NVIM:-}" ] || exit 0
+command -v nvim >/dev/null 2>&1 || exit 0
+
+payload=$(cat)
+
+summary_file="${HOME}/.scrawl/last-response"
+mkdir -p "${HOME}/.scrawl"
+: > "$summary_file"
+
+if command -v jq >/dev/null 2>&1; then
+  transcript=$(printf '%s' "$payload" | jq -r '.transcript_path // empty' 2>/dev/null)
+  if [ -n "${transcript:-}" ] && [ -f "$transcript" ]; then
+    jq -rs '
+      map(select(.type == "assistant")) | last
+      | .message.content // []
+      | map(select(.type == "text") | .text) | join(" ")
+    ' "$transcript" 2>/dev/null | tr '\n' ' ' | head -c 300 > "$summary_file"
+  fi
+fi
+
+nvim --server "$NVIM" --remote-expr "luaeval(\"require('scrawl.notify').done()\")" >/dev/null 2>&1
+
+exit 0

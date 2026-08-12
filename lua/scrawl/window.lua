@@ -95,6 +95,10 @@ function M.configure(opts)
   end
 end
 
+function M.is_focused()
+  return win ~= nil and vim.api.nvim_win_is_valid(win) and vim.api.nvim_get_current_win() == win
+end
+
 function M.get_chan() return chan end
 function M.get_buf() return buf end
 

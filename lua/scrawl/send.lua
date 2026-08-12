@@ -3,6 +3,18 @@ local window = require("scrawl.window")
 
 local M = {}
 
+-- Claude Code coalesces a single fast stdin write into a paste, so a trailing
+-- \r lands as a literal newline instead of submitting. Send the payload as a
+-- bracketed paste, then submit with a separate keypress write.
+local submit_delay = 120
+
+local function submit(chan, str)
+  vim.api.nvim_chan_send(chan, "\27[200~" .. str .. "\27[201~")
+  vim.defer_fn(function()
+    vim.api.nvim_chan_send(chan, "\r")
+  end, submit_delay)
+end
+
 local function build_prompt(ctx, input)
   local file_ref = string.format("@%s:%d", ctx.file, ctx.line)
   if ctx.selection then
@@ -17,7 +29,7 @@ function M.text(str)
   if not chan then
     return print("scrawl: no active session. Start with toggle() first")
   end
-  vim.api.nvim_chan_send(chan, str .. "\r")
+  submit(chan, str)
 end
 
 function M.question()
@@ -31,12 +43,7 @@ function M.question()
   vim.ui.input({ prompt = "Question: " }, function(input)
     if not input or input == "" then return end
 
-    local prompt = build_prompt(ctx, input)
-    local display = ctx.selection
-      and string.format("[%s:%d] (with selection) %s", ctx.file, ctx.line, input)
-      or string.format("[%s:%d] %s", ctx.file, ctx.line, input)
-
-    vim.api.nvim_chan_send(chan, prompt .. "\r")
+    submit(chan, build_prompt(ctx, input))
     window.show()
   end)
 end
@@ -46,7 +53,7 @@ function M.clear()
   if not chan then
     return print("scrawl: no active session. Start with toggle() first")
   end
-  vim.api.nvim_chan_send(chan, "/clear\r")
+  submit(chan, "/clear")
   print("scrawl: session cleared")
 end
 

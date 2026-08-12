@@ -5,6 +5,16 @@ All notable changes to scrawl.nvim will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-08-12
+
+### Added
+
+- Stop hook — when Claude finishes a turn, the parent Neovim instance gets a `vim.notify` with the first ~120 characters of the response, so you no longer have to open the terminal to see whether it's done. Stays quiet while the scrawl window is focused, and only fires for sessions running inside an nvim terminal
+
+### Fixed
+
+- Notes, decisions, questions, and `/clear` now submit themselves. The payload and its trailing carriage return were written to the terminal in a single chunk, which Claude Code coalesced into a paste — the `\r` landed as a literal newline and the input sat in the composer waiting for a manual Enter. The payload is now sent as a bracketed paste, with the submit keypress written separately
+
 ## [0.4.0] - 2026-08-12
 
 ### Added
