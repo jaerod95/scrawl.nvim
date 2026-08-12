@@ -49,6 +49,14 @@ describe("scrawl", function()
     it("exports status function", function()
       assert.is_function(claude.status)
     end)
+
+    it("exports target function", function()
+      assert.is_function(claude.target)
+    end)
+
+    it("exports untarget function", function()
+      assert.is_function(claude.untarget)
+    end)
   end)
 
   describe("setup", function()

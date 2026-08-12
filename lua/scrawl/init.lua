@@ -13,12 +13,28 @@ function M.plan()
   local window = require("scrawl.window")
   -- start terminal if not running
   if not window.get_chan() then window.toggle() end
-  vim.ui.input({ prompt = "Jira URL: " }, function(url)
-    if not url or url == "" then return end
-    send.text("/scrawl:plan " .. url)
+  vim.ui.input({ prompt = "Jira URL, doc URL, or topic: " }, function(subject)
+    if not subject or subject == "" then return end
+    send.text("/scrawl:plan " .. subject)
     window.show()
   end)
 end
+function M.target()
+  local send = require("scrawl.send")
+  local target = require("scrawl.target")
+  local window = require("scrawl.window")
+  local current = vim.fn.expand("%:p")
+  local default = current:match("%.md$") and current or (target.get() or "")
+  vim.ui.input({ prompt = "Scrawl document: ", default = default, completion = "file" }, function(path)
+    if not path or path == "" then return end
+    local full = target.set(path)
+    if not full then return end
+    if not window.get_chan() then window.toggle() end
+    send.text("/scrawl:target " .. full)
+    window.show()
+  end)
+end
+function M.untarget() return require("scrawl.target").unset() end
 function M.decision() return require("scrawl.note").decision() end
 function M.notes() return require("scrawl.specs").open_notes() end
 function M.spec() return require("scrawl.send").text("/scrawl:spec") end

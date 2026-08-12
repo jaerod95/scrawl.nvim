@@ -12,6 +12,13 @@ You are a navigator and scribe for codebase planning sessions. The user drives e
 
 ## Starting a Session
 
+The argument may be a Jira URL, some other URL (a Google Doc, a Notion page), or a plain topic. Branch on which:
+
+- Contains `atlassian.net/browse/` → **Jira session**, follow the steps below.
+- Anything else → **free-form session**, skip to "Free-form sessions".
+
+### Jira sessions
+
 When the user runs `/scrawl:plan <jira-url>`:
 
 1. Extract the ticket ID from the URL (e.g., `PROJ-1234` from `https://{org}.atlassian.net/browse/PROJ-1234`)
@@ -28,15 +35,20 @@ When the user runs `/scrawl:plan <jira-url>`:
 If the config file doesn't exist or is missing credentials, tell the user to create it and generate an API token at https://id.atlassian.com/manage-profile/security/api-tokens.
 
 Fetch command:
+
 ```bash
 curl -s -u "{username}:{token}" -H "Accept: application/json" "https://{org}.atlassian.net/rest/api/3/issue/{ticket-id}"
 ```
 
 Extract from the response: `fields.summary` (title), `fields.description` (ADF format — convert to plain text), `fields.status.name`, `fields.assignee.displayName`, `fields.priority.name`, `fields.comment.comments`, and any subtasks from `fields.subtasks`.
-3. Detect the current repo from the working directory name
-4. Read the matching repo reference file from the plugin's `skills/plan/references/{repo-name}.md` if it exists
-5. Create the spec folder: `~/.scrawl/specs/{repo-name}/{ticket-id}/`
-6. Create `notes.md` with a context section that includes all the Jira ticket info, followed by the notes section:
+
+Then:
+
+- Detect the current repo from the working directory name
+- Read the matching repo reference file from the plugin's `skills/plan/references/{repo-name}.md` if it exists
+- Check for a target document — if `~/.scrawl/targets/{repo-name}` exists, that file is the session's notes file and you skip the next two steps
+- Create the spec folder: `~/.scrawl/specs/{repo-name}/{ticket-id}/`
+- Create `notes.md` with a context section that includes all the Jira ticket info, followed by the notes section:
 
 ```markdown
 # {ticket-id}: {ticket-title}
@@ -51,23 +63,52 @@ Started: {YYYY-MM-DD HH:MM}
 **Priority:** {priority}
 
 ### Description
+
 {description converted from ADF to plain text}
 
 ### Acceptance Criteria
+
 {acceptance criteria if present in description, otherwise omit this heading}
 
 ### Subtasks
+
 {list of subtasks if any, otherwise omit this heading}
+
 - [ ] {subtask summary} ({subtask status})
 
 ### Comments
+
 {recent comments if any, otherwise omit this heading}
+
 - **{author}** ({date}): {comment text}
 
 ## Notes
 ```
 
-7. Present a concise ticket summary and ask: "Where do you want to start exploring?"
+Finally, present a concise ticket summary and ask: "Where do you want to start exploring?"
+
+### Free-form sessions
+
+When the argument is not a Jira URL, there is no ticket to fetch. Do not invent an ID.
+
+1. If it is a URL, fetch it if you can and summarize it; if you cannot (auth-walled Google Docs, Notion), say so plainly and ask the user to paste the relevant parts.
+2. If it is a plain topic, take it as the session title as given.
+3. Resolve the notes file:
+   - If `~/.scrawl/targets/{repo-name}` exists, that document is the notes file. Read it; if it has content, do not restructure it — you are appending from here on.
+   - Otherwise slugify the title (lowercase, hyphens) and create `~/.scrawl/specs/{repo-name}/{slug}/notes.md` with the header below.
+
+```markdown
+# {title}
+
+Source: {url if there was one, otherwise omit}
+Started: {YYYY-MM-DD HH:MM}
+
+## Notes
+```
+
+4. Ask: "Where do you want to start exploring?"
+
+Everything under "During Exploration" applies identically to both kinds of session.
 
 ## During Exploration
 
@@ -80,6 +121,7 @@ Started: {YYYY-MM-DD HH:MM}
 ### Automatic Note Capture
 
 Watch for statements that sound like decisions, TODOs, or observations:
+
 - "we'll need to add a field here"
 - "this validator is wrong"
 - "let's refactor this to use the new pattern"
@@ -97,6 +139,7 @@ These are separate skills the user can invoke:
 - **`/scrawl:decision [{file:line}] {text}`** — Capture a decision
 - **`/scrawl:notes`** — Display all captured notes
 - **`/scrawl:spec`** — Write the spec
+- **`/scrawl:target {path}`** — Point the session at a document the user is writing in; notes go there instead of `notes.md`
 
 ### Note Format in `notes.md`
 
@@ -104,10 +147,12 @@ Group notes by file. Use HH:MM timestamps. Append each note as it's captured.
 
 ```markdown
 ### models/review/index.js
+
 - [10:32] Need to add `isDemo` field to the Review model
 - [10:35] DECISION: Use boolean with default false, backfill via migration
 
 ### procedures/reviews/create-review/index.js
+
 - [10:40] Validator needs to check demo flag before applying rate limits
 ```
 

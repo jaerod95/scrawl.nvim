@@ -11,11 +11,19 @@ Append a note to the active planning session's `notes.md` file.
 
 ## Finding the notes file
 
-Look in `~/.scrawl/specs/` for the current repo's most recently modified `notes.md`:
+A session may be pointed at a document the user is writing in (`/scrawl:target`). Check that pointer first and fall back to the most recently modified `notes.md` for the repo:
 
 ```bash
-find ~/.scrawl/specs/$(basename $(git rev-parse --show-toplevel)) -name "notes.md" -type f -exec ls -t {} + | head -1
+repo=$(basename "$(git rev-parse --show-toplevel)")
+pointer="$HOME/.scrawl/targets/$repo"
+if [ -f "$pointer" ]; then
+  cat "$pointer"
+else
+  find "$HOME/.scrawl/specs/$repo" -name "notes.md" -type f -exec ls -t {} + 2>/dev/null | head -1
+fi
 ```
+
+The resolved path may contain spaces — always quote it. Everything below applies to whichever file this resolves to.
 
 ## Format
 

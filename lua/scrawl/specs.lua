@@ -84,6 +84,11 @@ function M.pick()
 end
 
 function M.open_notes()
+  local target = require("scrawl.target").get()
+  if target then
+    return vim.cmd("edit " .. vim.fn.fnameescape(target))
+  end
+
   local repo = get_repo_name()
   if not repo then
     return print("scrawl: not in a git repository")
