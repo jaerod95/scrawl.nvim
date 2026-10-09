@@ -44,7 +44,13 @@ function M.toggle()
   buf = vim.api.nvim_create_buf(false, true)
   create_float(buf)
 
-  local cmd = skip_permissions and "claude --dangerously-skip-permissions" or "claude"
+  -- Drop the inherited tmux env: with $TMUX set, Claude Code wraps its OSC
+  -- escapes (e.g. kitty OSC 99 notifications) in tmux DCS passthrough, which
+  -- nvim's terminal can't parse and renders as "99;i=...:p=title;..." text.
+  local cmd = "env -u TMUX -u TMUX_PANE claude"
+  if skip_permissions then
+    cmd = cmd .. " --dangerously-skip-permissions"
+  end
   chan = vim.fn.termopen(cmd, {
     on_exit = function()
       buf, win, chan = nil, nil, nil
