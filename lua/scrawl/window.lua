@@ -42,6 +42,10 @@ function M.toggle()
     return
   end
 
+  M.start()
+end
+
+function M.start()
   buf = vim.api.nvim_create_buf(false, true)
   create_float(buf)
 
@@ -77,6 +81,17 @@ function M.toggle()
   })
 
   vim.cmd("startinsert")
+  return chan
+end
+
+-- Claude Code has drawn its input prompt once a line starts with the prompt
+-- glyph; anything pasted before that is dropped.
+function M.is_ready()
+  if not (buf and vim.api.nvim_buf_is_valid(buf)) then return false end
+  for _, line in ipairs(vim.api.nvim_buf_get_lines(buf, 0, -1, false)) do
+    if line:match("^%s*│?%s*❯") or line:match("^%s*│?%s*>%s") then return true end
+  end
+  return false
 end
 
 function M.stop()

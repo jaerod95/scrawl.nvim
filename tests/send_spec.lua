@@ -32,16 +32,33 @@ end
 
 describe("send", function()
   describe("text", function()
-    it("prints error when no session is active", function()
-      local messages = {}
-      local original_print = print
-      _G.print = function(msg) table.insert(messages, msg) end
+    it("starts a session and sends once it is ready when none is active", function()
+      local sent = {}
+      local started = false
 
-      send.text("hello")
+      package.loaded["scrawl.window"] = nil
+      local window = require("scrawl.window")
+      window.get_chan = function() return started and 7 or nil end
+      window.start = function() started = true return 7 end
+      window.is_ready = function() return true end
 
-      _G.print = original_print
-      assert.are.equal(1, #messages)
-      assert.is_truthy(messages[1]:find("no active session"))
+      local original_chan_send = vim.api.nvim_chan_send
+      vim.api.nvim_chan_send = function(chan, str) table.insert(sent, { chan = chan, str = str }) end
+      local original_defer = vim.defer_fn
+      vim.defer_fn = function(cb) cb() end
+
+      package.loaded["scrawl.send"] = nil
+      require("scrawl.send").text("hello")
+
+      vim.defer_fn = original_defer
+      vim.api.nvim_chan_send = original_chan_send
+      package.loaded["scrawl.window"] = nil
+      package.loaded["scrawl.send"] = nil
+
+      assert.is_true(started)
+      assert.are.equal(2, #sent)
+      assert.are.equal(7, sent[1].chan)
+      assert.are.equal("\27[200~hello\27[201~", sent[1].str)
     end)
 
     it("wraps the payload in bracketed paste markers", function()

@@ -29,7 +29,6 @@ function M.target()
     if not path or path == "" then return end
     local full = target.set(path)
     if not full then return end
-    if not window.get_chan() then window.toggle() end
     send.text("/scrawl:target " .. full)
     window.show()
   end)
