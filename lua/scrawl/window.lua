@@ -85,11 +85,16 @@ function M.start()
 end
 
 -- Claude Code has drawn its input prompt once a line starts with the prompt
--- glyph; anything pasted before that is dropped.
+-- glyph (optionally inside a │ box border); anything pasted before that is
+-- dropped. Lua patterns are byte-based, so multi-byte glyphs can't take `?`.
+local prompt_patterns = { "^%s*❯", "^%s*│%s*❯", "^%s*>%s", "^%s*│%s*>%s" }
+
 function M.is_ready()
   if not (buf and vim.api.nvim_buf_is_valid(buf)) then return false end
   for _, line in ipairs(vim.api.nvim_buf_get_lines(buf, 0, -1, false)) do
-    if line:match("^%s*│?%s*❯") or line:match("^%s*│?%s*>%s") then return true end
+    for _, pattern in ipairs(prompt_patterns) do
+      if line:match(pattern) then return true end
+    end
   end
   return false
 end
