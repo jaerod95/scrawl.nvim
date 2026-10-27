@@ -4,6 +4,7 @@ local buf = nil
 local win = nil
 local chan = nil
 local skip_permissions = true
+local images = true
 
 local function create_float(target_buf)
   local width = math.floor(vim.o.columns * 0.8)
@@ -47,7 +48,14 @@ function M.toggle()
   -- Drop the inherited tmux env: with $TMUX set, Claude Code wraps its OSC
   -- escapes (e.g. kitty OSC 99 notifications) in tmux DCS passthrough, which
   -- nvim's terminal can't parse and renders as "99;i=...:p=title;..." text.
-  local cmd = "env -u TMUX -u TMUX_PANE claude"
+  local cmd = "env -u TMUX -u TMUX_PANE"
+  if images then
+    -- nvim's terminal won't answer Claude's graphics probe; images.lua
+    -- forwards the sequences to the real terminal instead.
+    cmd = cmd .. " CLAUDE_CODE_FORCE_TERMINAL_IMAGES=1"
+    require("scrawl.images").attach(buf)
+  end
+  cmd = cmd .. " claude"
   if skip_permissions then
     cmd = cmd .. " --dangerously-skip-permissions"
   end
@@ -98,6 +106,9 @@ end
 function M.configure(opts)
   if opts.skip_permissions ~= nil then
     skip_permissions = opts.skip_permissions
+  end
+  if opts.images ~= nil then
+    images = opts.images
   end
 end
 
